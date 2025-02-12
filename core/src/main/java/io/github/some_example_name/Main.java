@@ -4,25 +4,29 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
+
 public class Main extends Game {
-    //@Override
-    Sprite player = new Sprite();
+    private Sprite player;
+    private Background background;
+
     public void create() {
-        player.create();
+        setScreen(new FirstScreen());           // initializes the screen
+        player = new Sprite();             // assigns a player of object Sprite
+        player.create();                        // constructs the player
+
+        background = new Background();
+        background.create();
     }
+
+    // the order of rendering matters, so we must make sure to render the BG first
     public void render() {
-        ScreenUtils.clear(Color.BLACK);
-        player.render();
+        ScreenUtils.clear(Color.BLACK);         // clears the background every frame
+
+        background.render();
+
+        player.movement();                      // checks for movement
+        player.render();                        // displays the player on the screen
 
     }
-    public static void main (String[] args)
-    {
-        Main myProgram = new Main();
-        myProgram.create();
-        myProgram.setScreen(new FirstScreen());
-        //myProgram.render();
-    }
-
 }
 
