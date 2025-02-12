@@ -27,26 +27,43 @@ public class Sprite extends Game{
         playerY = 0;
         hitbox = new Rectangle( playerX, playerY, 200, 200);
     }
-    public void updateMove(){
-        System.out.println("created");
-        if (Gdx.input.isKeyPressed(Keys.LEFT))
-            playerX -= 1 * Gdx.graphics.getDeltaTime();
-        if (Gdx.input.isKeyPressed(Keys.RIGHT))
-            playerX += 1 * Gdx.graphics.getDeltaTime();
-        if (Gdx.input.isKeyPressed(Keys.UP))
-            playerY+= 1 * Gdx.graphics.getDeltaTime();
+
+    public void render() {
+        //System.out.println("render");
+        if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+            playerX -= 2;
+//            System.out.println("left");
+        }
+        if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+            playerX += 2;
+//            System.out.println("right");
+        }
+        if (Gdx.input.isKeyPressed(Keys.UP)) {
+            playerY += 2;
+//            System.out.println("up");
+        }
         if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-            playerY -= 1 * Gdx.graphics.getDeltaTime();
+            playerY -= 2;
+//            System.out.println("down");
 
         }
-
-    }
-    public void render() {
-
-
-        System.out.println("down");
-        // update turtle rectangle location
-        updateMove();
+//        if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+//            playerX -= 1 * Gdx.graphics.getDeltaTime();
+//            System.out.println("left");
+//        }
+//        if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+//            playerX += 1 * Gdx.graphics.getDeltaTime();
+//            System.out.println("right");
+//        }
+//        if (Gdx.input.isKeyPressed(Keys.UP)) {
+//            playerY += 1 * Gdx.graphics.getDeltaTime();
+//            System.out.println("up");
+//        }
+//        if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+//            playerY -= 1 * Gdx.graphics.getDeltaTime();
+//            System.out.println("down");
+//
+//        }
         hitbox.setPosition(playerX, playerY);
         batch.begin();
 

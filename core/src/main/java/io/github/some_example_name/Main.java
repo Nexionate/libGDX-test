@@ -7,26 +7,21 @@ import com.badlogic.gdx.utils.ScreenUtils;
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
     //@Override
-
+    Sprite player = new Sprite();
     public void create() {
-        //setScreen(new FirstScreen());
-        Sprite player = new Sprite();
         player.create();
-
-        player.render();
-        //System.out.println("Hello World");
     }
     public void render() {
-        //ScreenUtils.clear(Color.BLACK);
-        super.render();
-        //System.out.println("created");
+        ScreenUtils.clear(Color.BLACK);
+        player.render();
+
     }
     public static void main (String[] args)
     {
         Main myProgram = new Main();
         myProgram.create();
         myProgram.setScreen(new FirstScreen());
-        myProgram.render();
+        //myProgram.render();
     }
 
 }
