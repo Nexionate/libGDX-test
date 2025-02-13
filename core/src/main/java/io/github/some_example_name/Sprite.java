@@ -17,6 +17,7 @@ public class Sprite extends Game{
     private BitmapFont font;
     private float playerX;
     private float playerY;
+    private float maxSpeed = 2.0f;
     private float velocityX;
     private float velocityY;
 
@@ -33,20 +34,30 @@ public class Sprite extends Game{
         //hitbox = new Rectangle( playerX, playerY, 200, 200);
         hitbox = new Rectangle( playerX, playerY, texture.getWidth(), texture.getHeight());
     }
-
     public void movement(){
+        playerX += ((velocityX + maxSpeed) - playerX) / 15;
+        playerY += ((velocityY + maxSpeed) - playerY) / 15;
+    }
+    public void collision(int n, int s, int e, int w){
+
+    }
+
+    public void input(){
         if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-            playerX -= 2;
+            velocityX -= 2;
         }
         if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-            playerX += 2;
+            velocityX += 2;
         }
         if (Gdx.input.isKeyPressed(Keys.UP)) {
-            playerY += 2;
+            velocityY += 2;
         }
         if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-            playerY -= 2;
+            velocityY -= 2;
         }
+    }
+    public Rectangle getHitbox() {
+        return hitbox;
     }
 
     public void render() {
@@ -54,7 +65,7 @@ public class Sprite extends Game{
 
         hitbox.setPosition(playerX, playerY);
         batch.begin();
-        String positionText = "Player Position: (" + playerX + ", " + playerY + ")";
+        String positionText = "Player Position: (" + Math.floor(playerX * 100) / 100 + ", " + Math.floor(playerY * 100) / 100 + ")";
         font.draw(batch, positionText, 10, Gdx.graphics.getHeight() - 10);
         batch.draw( texture, playerX, playerY );
         batch.end();

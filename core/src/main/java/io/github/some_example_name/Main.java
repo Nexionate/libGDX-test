@@ -2,6 +2,7 @@ package io.github.some_example_name;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 
@@ -21,9 +22,10 @@ public class Main extends Game {
     // the order of rendering matters, so we must make sure to render the BG first
     public void render() {
         ScreenUtils.clear(Color.BLACK);         // clears the background every frame
-
+        background.wallCollision(player.getHitbox());
         background.render();
 
+        player.input();                      // checks for movement
         player.movement();                      // checks for movement
         player.render();                        // displays the player on the screen
 
