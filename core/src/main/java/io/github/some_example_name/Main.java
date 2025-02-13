@@ -10,7 +10,7 @@ public class Main extends Game {
     private Background background;
 
     public void create() {
-        setScreen(new FirstScreen());           // initializes the screen
+        //setScreen(new FirstScreen());           // initializes the screen
         player = new Sprite();             // assigns a player of object Sprite
         player.create();                        // constructs the player
 

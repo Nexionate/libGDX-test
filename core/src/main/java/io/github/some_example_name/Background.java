@@ -19,7 +19,7 @@ public class Background {
         texture = new Texture(Gdx.files.internal("background.png"));
     }
     public void render(){
-        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(texture, 0, 0);
         batch.end();
