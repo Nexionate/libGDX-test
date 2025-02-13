@@ -22,11 +22,11 @@ public class Main extends Game {
     // the order of rendering matters, so we must make sure to render the BG first
     public void render() {
         ScreenUtils.clear(Color.BLACK);         // clears the background every frame
-        background.wallCollision(player.getHitbox());
-        background.render();
 
-        player.input();                      // checks for movement
+        background.render();
+        player.collision(background.createWalls());
         player.movement();                      // checks for movement
+        player.input();                      // checks for movement
         player.render();                        // displays the player on the screen
 
     }

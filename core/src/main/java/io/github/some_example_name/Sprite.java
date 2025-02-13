@@ -17,9 +17,11 @@ public class Sprite extends Game{
     private BitmapFont font;
     private float playerX;
     private float playerY;
-    private float maxSpeed = 2.0f;
+    private float maxSpeed = 3.0f;
     private float velocityX;
     private float velocityY;
+    private String collisionTesting;
+    private String velocityText;
 
     private Rectangle hitbox;
 
@@ -38,26 +40,48 @@ public class Sprite extends Game{
         playerX += ((velocityX + maxSpeed) - playerX) / 15;
         playerY += ((velocityY + maxSpeed) - playerY) / 15;
     }
-    public void collision(int n, int s, int e, int w){
-
+    public void collision(Rectangle[] walls){
+        if(walls[0].overlaps(hitbox)){
+            collisionTesting = "North";
+            velocityY -= maxSpeed;
+//            velocityY = Gdx.graphics.getHeight();
+            //velocityY = Gdx.graphics.getHeight() - maxSpeed;
+            //velocityY = (Gdx.graphics.getHeight() - 10) - maxSpeed;
+            //velocityY = Gdx.graphics.getHeight() - velocityY;
+            //velocityY = Gdx.graphics.getHeight();
+//            velocityY = 600 - maxSpeed;
+        }
+        else if(walls[1].overlaps(hitbox)){
+            collisionTesting = "South";
+            velocityY = 0;
+            //velocityY = 0 - maxSpeed;
+        }
+        else if(walls[2].overlaps(hitbox)){
+            collisionTesting = "East";
+            velocityX = Gdx.graphics.getWidth();
+        }
+        else if(walls[3].overlaps(hitbox)){
+            collisionTesting = "West";
+            velocityX = 0;
+        }
+        else{
+            collisionTesting = "None";
+        }
     }
 
     public void input(){
         if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-            velocityX -= 2;
+            velocityX -= maxSpeed;
         }
         if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-            velocityX += 2;
+            velocityX += maxSpeed;
         }
         if (Gdx.input.isKeyPressed(Keys.UP)) {
-            velocityY += 2;
+            velocityY += maxSpeed;
         }
         if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-            velocityY -= 2;
+            velocityY -= maxSpeed;
         }
-    }
-    public Rectangle getHitbox() {
-        return hitbox;
     }
 
     public void render() {
@@ -66,7 +90,11 @@ public class Sprite extends Game{
         hitbox.setPosition(playerX, playerY);
         batch.begin();
         String positionText = "Player Position: (" + Math.floor(playerX * 100) / 100 + ", " + Math.floor(playerY * 100) / 100 + ")";
+        String collisionText = "Current Collision: " +  collisionTesting;
+        String velocityText = "Velocity X: " +  velocityX + ", Velocity X: " +  velocityY;
         font.draw(batch, positionText, 10, Gdx.graphics.getHeight() - 10);
+        font.draw(batch, collisionText, 10, Gdx.graphics.getHeight() - 25);
+        font.draw(batch, velocityText, 10, Gdx.graphics.getHeight() - 40);
         batch.draw( texture, playerX, playerY );
         batch.end();
 
