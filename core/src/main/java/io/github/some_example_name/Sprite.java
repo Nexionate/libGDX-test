@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -35,11 +36,22 @@ public class Sprite extends Game{
         playerY = 0;
         //hitbox = new Rectangle( playerX, playerY, 200, 200);
         hitbox = new Rectangle( playerX, playerY, texture.getWidth(), texture.getHeight());
+
+//        ShapeRenderer shape = new ShapeRenderer();
+//        shape.setColor(0, 1, 0, 1);
+//        shape.begin(ShapeRenderer.ShapeType.Line);
+//        shape.rect(playerX, playerY, texture.getWidth(), texture.getHeight());
+//        shape.end();
+
     }
+
+
     public void movement(){
         playerX += ((velocityX + maxSpeed) - playerX) / 15;
         playerY += ((velocityY + maxSpeed) - playerY) / 15;
     }
+
+
     public void collision(Rectangle[] walls){
         if(walls[0].overlaps(hitbox)){
             collisionTesting = "North";
@@ -53,8 +65,9 @@ public class Sprite extends Game{
         }
         else if(walls[1].overlaps(hitbox)){
             collisionTesting = "South";
-            velocityY = 0;
+//            velocityY = 0;
             //velocityY = 0 - maxSpeed;
+            velocityY += maxSpeed;
         }
         else if(walls[2].overlaps(hitbox)){
             collisionTesting = "East";
@@ -82,6 +95,9 @@ public class Sprite extends Game{
         if (Gdx.input.isKeyPressed(Keys.DOWN)) {
             velocityY -= maxSpeed;
         }
+        if (Gdx.input.isKeyPressed(Keys.SPACE)) {
+            velocityY -= maxSpeed;
+        }
     }
 
     public void render() {
@@ -89,13 +105,17 @@ public class Sprite extends Game{
 
         hitbox.setPosition(playerX, playerY);
         batch.begin();
+
         String positionText = "Player Position: (" + Math.floor(playerX * 100) / 100 + ", " + Math.floor(playerY * 100) / 100 + ")";
         String collisionText = "Current Collision: " +  collisionTesting;
         String velocityText = "Velocity X: " +  velocityX + ", Velocity X: " +  velocityY;
         font.draw(batch, positionText, 10, Gdx.graphics.getHeight() - 10);
         font.draw(batch, collisionText, 10, Gdx.graphics.getHeight() - 25);
         font.draw(batch, velocityText, 10, Gdx.graphics.getHeight() - 40);
-        batch.draw( texture, playerX, playerY );
+        font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), Gdx.graphics.getWidth() - 80, Gdx.graphics.getHeight() - 10);
+        //batch.draw(hitbox, playerX, playerY);
+        batch.draw(texture, playerX, playerY );
+
         batch.end();
 
     }
