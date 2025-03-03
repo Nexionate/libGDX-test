@@ -47,8 +47,8 @@ public class Sprite extends Game{
 
 
     public void movement(){
-        playerX += ((velocityX + maxSpeed) - playerX) / 15;
-        playerY += ((velocityY + maxSpeed) - playerY) / 15;
+        playerX += ((velocityX + maxSpeed) - playerX) / 10;
+        playerY += ((velocityY + maxSpeed) - playerY) / 10;
     }
 
 
@@ -96,8 +96,20 @@ public class Sprite extends Game{
             velocityY -= maxSpeed;
         }
         if (Gdx.input.isKeyPressed(Keys.SPACE)) {
-            velocityY -= maxSpeed;
+            if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+                velocityX -= maxSpeed * 2;
+            }
+            if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+                velocityX += maxSpeed * 2;
+            }
+            if (Gdx.input.isKeyPressed(Keys.UP)) {
+                velocityY += maxSpeed* 2;
+            }
+            if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+                velocityY -= maxSpeed* 2;
+            }
         }
+
     }
 
     public void render() {
