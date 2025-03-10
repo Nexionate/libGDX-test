@@ -67,12 +67,6 @@ public class Main extends Game {
             int col = rand.nextInt(0, 3);
             int randSpeed = rand.nextInt(8, 13);
             switch (col) {
-//                case 0: enemy.assignAttributes(enemy, 100, 1 + (float) randSpeed /20, "blue");
-//                break;
-//                case 1: enemy.assignAttributes(enemy, 50, 2 + (float) randSpeed /20, "green");
-//                break;
-//                case 2: enemy.assignAttributes(enemy, 25, 3 + (float) randSpeed /40, "red");
-//                break;
                 case 0: enemy.assignAttributes(enemy, 100, 1 * (float) randSpeed /10, "blue");
                     break;
                 case 1: enemy.assignAttributes(enemy, 50, 2 * (float) randSpeed /10, "green");
@@ -80,7 +74,6 @@ public class Main extends Game {
                 case 2: enemy.assignAttributes(enemy, 25, 3 * (float) randSpeed /10, "red");
                     break;
             }
-
             enemy.create();
 
 
@@ -97,19 +90,14 @@ public class Main extends Game {
         allBullets.add(bullet);
     }
 
-
-    // the order of rendering matters, so we must make sure to render the BG first
-    public void render() {
+    public void update() {
         spawnEnemies();
-
-        ScreenUtils.clear(Color.BLACK);         // clears the background every frame
         camera.update();
         tiledMapRenderer.setView(camera);
 
         player.collision(background.createWalls());
         player.movement();                      // checks for movement
         player.input();                      // checks for movement
-
 
         /*
         This will return a number between 0-4.
@@ -124,6 +112,14 @@ public class Main extends Game {
         if(isFiring != 0){
             spawnBullets(isFiring);
         }
+    }
+
+    // the order of rendering matters, so we must make sure to render the BG first
+    public void render() {
+        ScreenUtils.clear(Color.BLACK);         // clears the background every frame
+        update();
+
+
 
         tiledMapRenderer.render();
 

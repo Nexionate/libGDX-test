@@ -69,23 +69,18 @@ public class Player extends Game{
     public void collision(Rectangle[] walls){
         if(walls[0].overlaps(hitbox)){
             collisionTesting = "North";
-            velocityY -= maxSpeed;
-//            velocityY = Gdx.graphics.getHeight();
-            //velocityY = Gdx.graphics.getHeight() - maxSpeed;
-            //velocityY = (Gdx.graphics.getHeight() - 10) - maxSpeed;
-            //velocityY = Gdx.graphics.getHeight() - velocityY;
-            //velocityY = Gdx.graphics.getHeight();
-//            velocityY = 600 - maxSpeed;
+            velocityY = Gdx.graphics.getHeight() - texture.getHeight() - 10;
         }
         else if(walls[1].overlaps(hitbox)){
             collisionTesting = "South";
 //            velocityY = 0;
             //velocityY = 0 - maxSpeed;
-            velocityY += maxSpeed;
+            velocityY = 0;
         }
         else if(walls[2].overlaps(hitbox)){
             collisionTesting = "East";
-            velocityX = Gdx.graphics.getWidth();
+            velocityX = Gdx.graphics.getWidth() - texture.getWidth() - 10;
+
         }
         else if(walls[3].overlaps(hitbox)){
             collisionTesting = "West";
@@ -113,7 +108,7 @@ public class Player extends Game{
             if (Gdx.input.isKeyPressed(Keys.A)) {
                 velocityX -= maxSpeed * 3;
             }
-            if (Gdx.input.isKeyPressed(Keys.S)) {
+            if (Gdx.input.isKeyPressed(Keys.D)) {
                 velocityX += maxSpeed * 3;
             }
             if (Gdx.input.isKeyPressed(Keys.W)) {
@@ -163,13 +158,9 @@ public class Player extends Game{
         return playerY + (float) texture.getHeight() / 2;
     }
 
-    public void render() {
-
-
-        hitbox.setPosition(playerX, playerY);
-        batch.begin();
-
+    public void textRender(){
         String positionText = "Player Position: (" + Math.floor(playerX * 100) / 100 + ", " + Math.floor(playerY * 100) / 100 + ")";
+        String positionCenterText = "Player Position: (" + Math.floor(getPlayerXCenter() * 100) / 100 + ", " + Math.floor(getPlayerYCenter() * 100) / 100 + ")";
         String collisionText = "Current Collision: " +  collisionTesting;
         String velocityText = "Velocity X: " +  velocityX + ", Velocity X: " +  velocityY;
         String dashText = "Dash: " +  dashTimer;
@@ -178,7 +169,17 @@ public class Player extends Game{
         font.draw(batch, collisionText, 10, Gdx.graphics.getHeight() - 25);
         font.draw(batch, velocityText, 10, Gdx.graphics.getHeight() - 40);
         font.draw(batch, dashText, 10, Gdx.graphics.getHeight() - 55);
+        font.draw(batch, positionCenterText, 10, Gdx.graphics.getHeight() - 70);
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), Gdx.graphics.getWidth() - 80, Gdx.graphics.getHeight() - 10);
+    }
+
+    public void render() {
+
+
+        hitbox.setPosition(playerX, playerY);
+        batch.begin();
+
+        textRender();
         //batch.draw(hitbox, playerX, playerY);
         batch.draw(texture, playerX, playerY );
 

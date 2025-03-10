@@ -20,6 +20,8 @@ public class enemyAbstract extends Game implements enemyInterface{
     private Rectangle entityHitbox;
     private float entityX = 0;
     private float entityY = 0;
+    private float entityVelX = 0;
+    private float entityVelY = 0;
     private int health = 100;
     private float targetX;
     private float targetY;
@@ -39,18 +41,32 @@ public class enemyAbstract extends Game implements enemyInterface{
 
     @Override
     public void updateMovement() {
+//        if ((int) entityX < (int)targetX){
+//            entityX += speed;
+//        }
+//        if ((int) entityX > (int)targetX){
+//            entityX -= speed;
+//        }
+//        if ((int) entityY < (int)targetY){
+//            entityY += speed;
+//        }
+//        if ((int) entityY > (int)targetY){
+//            entityY -= speed;
+//        }
         if ((int) entityX < (int)targetX){
-            entityX += speed;
+            entityVelX += speed;
         }
         if ((int) entityX > (int)targetX){
-            entityX -= speed;
+            entityVelX -= speed;
         }
         if ((int) entityY < (int)targetY){
-            entityY += speed;
+            entityVelY += speed;
         }
         if ((int) entityY > (int)targetY){
-            entityY -= speed;
+            entityVelY -= speed;
         }
+        entityX += ((entityVelX + speed) - entityX) / 20;
+        entityY += ((entityVelY + speed) - entityY) / 20;
 
 
     }

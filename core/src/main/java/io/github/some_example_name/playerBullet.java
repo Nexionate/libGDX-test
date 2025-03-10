@@ -16,6 +16,8 @@ public class playerBullet extends Game {
     private float bulletY = 0;
     private float speed = 3;
     private int direction;
+    private int damage = 5;
+
     @Override
     public void create() {
 
@@ -35,6 +37,12 @@ public class playerBullet extends Game {
     public void updateMovement() {
         // FOLLOWS  1:W,    2:A,     3:S,   4:D
 
+//        switch (direction) {
+//            case 1: bulletY += speed; break;
+//            case 2: bulletX -= speed; break;
+//            case 3: bulletY -= speed; break;
+//            case 4: bulletX += speed; break;
+//        }
         switch (direction) {
             case 1: bulletY += speed; break;
             case 2: bulletX -= speed; break;
@@ -49,9 +57,10 @@ public class playerBullet extends Game {
         sprite.setPosition(bulletX, bulletY);
         batch.begin();
 //        if (!((bulletX > Gdx.graphics.getWidth() || bulletX < 0) && (bulletY > Gdx.graphics.getHeight() || bulletY < 0))){
-        //batch.draw(texture, bulletX, bulletY);
-        sprite.draw(batch);
-        //}
+        if (!((bulletX + sprite.getWidth() - 10 > Gdx.graphics.getWidth() || bulletX < -10))){
+
+            sprite.draw(batch);
+        }
 
 
 
