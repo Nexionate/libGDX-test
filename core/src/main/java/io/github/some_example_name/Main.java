@@ -29,6 +29,8 @@ public class Main extends Game {
     private ArrayList<enemyAbstract> allEnemies;
     private ArrayList<playerBullet> allBullets;
     private int enemyTimer = 0;
+    private playerBullet bullet;
+    private int isFiring = 0;
 
 
     TiledMap tiledMap;
@@ -97,6 +99,13 @@ public class Main extends Game {
         enemyTimer ++;
     }
 
+    public void spawnBullets(int direction) {
+        bullet = new playerBullet();
+        bullet.setBulletPosition(player.getPlayerX(), player.getPlayerY(), direction);
+        bullet.create();
+        allBullets.add(bullet);
+    }
+
 
     // the order of rendering matters, so we must make sure to render the BG first
     public void render() {
@@ -110,12 +119,31 @@ public class Main extends Game {
         player.movement();                      // checks for movement
         player.input();                      // checks for movement
 
+
+        /*
+        This will return a number between 0-4.
+        - 0: nothing firing, you're good
+        - 1: Spawn bullet with direction UP
+        - 2: Spawn bullet with direction LEFT
+        - 3: Spawn bullet with direction DOWN
+        - 4: Spawn bullet with direction RIGHT
+        If not 0, call the function to spawn bullet and pass in the direction
+         */
+        isFiring = player.inputBullet();
+        if(isFiring != 0){
+            spawnBullets(isFiring);
+        }
+
         tiledMapRenderer.render();
 
         for (enemyAbstract enemy : allEnemies) {
             enemy.targetPlayer(player.getPlayerX(), player.getPlayerY());
             enemy.updateMovement();
             enemy.render();
+        }
+        for (playerBullet bullet : allBullets) {
+            bullet.updateMovement();
+            bullet.render();
         }
 
         player.render();                        // displays the player on the screen

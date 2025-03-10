@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.Game;
 
 public class playerBullet extends Game {
+    private Sprite sprite;
     private SpriteBatch batch;
     private Texture texture;
     private Rectangle bulletHitbox;
@@ -25,8 +26,11 @@ public class playerBullet extends Game {
     public void create() {
 
         batch = new SpriteBatch();
+
         texture = new Texture( Gdx.files.internal("assets/bullet.png") );
+        sprite = new Sprite(texture);
         bulletHitbox = new Rectangle( bulletX, bulletY, texture.getWidth(), texture.getHeight());
+        texture.setRotation(90);
     }
 
     public void setBulletPosition(float x, float y, int direction) {
@@ -35,7 +39,7 @@ public class playerBullet extends Game {
         this.direction = direction;
     }
 
-    public void update() {
+    public void updateMovement() {
         // FOLLOWS  1:W,    2:A,     3:S,   4:D
         switch (direction) {
             case 1: bulletY += speed; break;
@@ -46,12 +50,12 @@ public class playerBullet extends Game {
 
     }
     public void render() {
-        update();
+
         bulletHitbox.setPosition(bulletX, bulletY);
         batch.begin();
-        if (!((bulletX > Gdx.graphics.getWidth() || bulletX < 0) && (bulletY > Gdx.graphics.getHeight() || bulletY < 0))){
+//        if (!((bulletX > Gdx.graphics.getWidth() || bulletX < 0) && (bulletY > Gdx.graphics.getHeight() || bulletY < 0))){
             batch.draw(texture, bulletX, bulletY);
-        }
+        //}
 
 
 

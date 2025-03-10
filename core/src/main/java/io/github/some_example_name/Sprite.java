@@ -129,20 +129,28 @@ public class Sprite extends Game{
             }
 
         }
+
+
+    }
+    public int inputBullet(){
         if (fireDelay > 30) {
             if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-                playerFire(2);
+                fireDelay = 0;
+                return 2;
             } else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-                playerFire(4);
+                fireDelay = 0;
+                return 4;
             } else if (Gdx.input.isKeyPressed(Keys.UP)) {
-                playerFire(1);
+                fireDelay = 0;
+                return 1;
             } else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-                playerFire(3);
+                fireDelay = 0;
+                return 3;
             }
-            fireDelay = 0;
+
         }
         fireDelay++;
-
+        return 0;
     }
 
     public void playerFire(int direction){
