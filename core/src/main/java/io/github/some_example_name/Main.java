@@ -1,4 +1,5 @@
 package io.github.some_example_name;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.ArrayList;
+
 
 import java.util.Iterator;
 import java.util.Random;
@@ -36,6 +38,7 @@ public class Main extends Game {
 
 
     public void create() {
+
 
         allEnemies = new ArrayList<>();
         allBullets = new ArrayList<>();
@@ -68,7 +71,7 @@ public class Main extends Game {
             int col = rand.nextInt(0, 3);
             int randSpeed = rand.nextInt(8, 13);
             switch (col) {
-                case 0: enemy.assignAttributes(enemy, 100, 1 * (float) randSpeed /10, "blue");
+                case 0: enemy.assignAttributes(enemy, 75, 1 * (float) randSpeed /10, "blue");
                     break;
                 case 1: enemy.assignAttributes(enemy, 50, 2 * (float) randSpeed /10, "green");
                     break;

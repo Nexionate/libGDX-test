@@ -12,6 +12,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
+
 import java.util.Objects;
 
 public class enemyAbstract extends Game implements enemyInterface{
@@ -30,6 +31,7 @@ public class enemyAbstract extends Game implements enemyInterface{
     private BitmapFont font;
     private boolean isDead = false;
     private float lightFactor = 0.0f;  // The factor by which to lighten the color (0 to 1)
+
 
 
 
@@ -131,16 +133,13 @@ public class enemyAbstract extends Game implements enemyInterface{
 
         if (Objects.equals(this.colour, "blue")){
             batch.setColor(0 + lightFactor, 0 + lightFactor, 1 + lightFactor, 1); // Lighter blue
-            //batch.setColor(0, 0, 1, 1);
         } else if (Objects.equals(this.colour, "red")){
             batch.setColor(1 + lightFactor, 0 + lightFactor, 0 + lightFactor, 1); // Lighter red
-            //batch.setColor(1, 1, 0, 1);
         } else if (Objects.equals(this.colour, "green")){
             batch.setColor(0 + lightFactor, 1 + lightFactor, 0 + lightFactor, 1); // Lighter green
-            //batch.setColor(1, 1, 1, 1);
         }
 
-        font.draw(batch, healthText, getEntityXCenter(), getEntityYCenter() + entityHitbox.getWidth());
+        font.draw(batch, healthText, getEntityXCenter() - 35, getEntityYCenter() + entityHitbox.getWidth() /2 + 20);
         batch.draw(texture, entityX, entityY );
 
         batch.end();

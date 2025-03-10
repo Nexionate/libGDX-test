@@ -14,7 +14,7 @@ public class playerBullet extends Game {
     private Rectangle bulletHitbox;
     private float bulletX = 0;
     private float bulletY = 0;
-    private float speed = 3;
+    private float speed = 5;
     private int direction;
     private int damage = 5;
 
