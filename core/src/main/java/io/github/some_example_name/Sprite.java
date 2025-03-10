@@ -24,6 +24,7 @@ public class Sprite extends Game{
     private String collisionTesting;
     private String velocityText;
     private int dashTimer;
+    private int fireDelay = 0;
 
     private Rectangle hitbox;
 
@@ -101,34 +102,53 @@ public class Sprite extends Game{
     }
 
     public void input(){
-        if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+        if (Gdx.input.isKeyPressed(Keys.A)) {
             velocityX -= maxSpeed;
         }
-        if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Keys.D)) {
             velocityX += maxSpeed;
         }
-        if (Gdx.input.isKeyPressed(Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Keys.W)) {
             velocityY += maxSpeed;
         }
-        if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+        if (Gdx.input.isKeyPressed(Keys.S)) {
             velocityY -= maxSpeed;
         }
         if (Gdx.input.isKeyPressed(Keys.SPACE) && dashTimer > 60) {
-            if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+            if (Gdx.input.isKeyPressed(Keys.A)) {
                 velocityX -= maxSpeed * 3;
             }
-            if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+            if (Gdx.input.isKeyPressed(Keys.S)) {
                 velocityX += maxSpeed * 3;
             }
-            if (Gdx.input.isKeyPressed(Keys.UP)) {
+            if (Gdx.input.isKeyPressed(Keys.W)) {
                 velocityY += maxSpeed* 3;
             }
-            if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+            if (Gdx.input.isKeyPressed(Keys.S)) {
                 velocityY -= maxSpeed* 3;
             }
 
         }
+        if (fireDelay > 30) {
+            if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+                playerFire(2);
+            } else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+                playerFire(4);
+            } else if (Gdx.input.isKeyPressed(Keys.UP)) {
+                playerFire(1);
+            } else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+                playerFire(3);
+            }
+            fireDelay = 0;
+        }
+        fireDelay++;
 
+    }
+
+    public void playerFire(int direction){
+        playerBullet bullet = new playerBullet();
+        bullet.setBulletPosition(getPlayerX(), getPlayerY(), direction);
+        bullet.create();
     }
 
     public float getPlayerX() {
@@ -158,6 +178,7 @@ public class Sprite extends Game{
         batch.draw(texture, playerX, playerY );
 
         batch.end();
+
 
     }
     public void dispose() {

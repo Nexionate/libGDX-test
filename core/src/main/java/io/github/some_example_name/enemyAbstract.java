@@ -11,6 +11,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+
+import java.util.Objects;
+
 public class enemyAbstract extends Game implements enemyInterface{
     private SpriteBatch batch;
     private Texture texture;
@@ -20,12 +23,12 @@ public class enemyAbstract extends Game implements enemyInterface{
     private int health = 100;
     private float targetX;
     private float targetY;
-    private float speed = 2;
+    private float speed;
+    private String colour;
     private BitmapFont font;
 
-    public enemyAbstract(){
 
-    }
+
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -53,12 +56,10 @@ public class enemyAbstract extends Game implements enemyInterface{
     }
 
     @Override
-    public enemyAbstract assignAttributes() {
-        enemyAbstract enemy = new enemyAbstract();
+    public void assignAttributes(enemyAbstract enemy, int health, float speed, String colour) {
         enemy.health = health;
         enemy.speed = speed;
-        enemy.create();
-        return this;
+        enemy.colour = colour;
     }
 
     @Override
@@ -69,10 +70,19 @@ public class enemyAbstract extends Game implements enemyInterface{
 
     public void render() {
         entityHitbox.setPosition(entityX, entityY);
+
         String targetPos = "Target X: " +  targetX + " Target Y: " +  targetY;
-        String health = "Health" + health;
 
         batch.begin();
+
+        if (Objects.equals(this.colour, "blue")){
+            batch.setColor(0, 0, 1, 1);
+        } else if (Objects.equals(this.colour, "red")){
+            batch.setColor(1, 1, 0, 1);
+        } else if (Objects.equals(this.colour, "green")){
+            batch.setColor(1, 1, 1, 1);
+        }
+
         font.draw(batch, targetPos, 100, 100);
         batch.draw(texture, entityX, entityY );
 

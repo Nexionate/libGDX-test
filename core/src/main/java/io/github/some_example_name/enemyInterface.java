@@ -2,6 +2,6 @@ package io.github.some_example_name;
 
 public interface enemyInterface {
     void updateMovement();
-    enemyAbstract assignAttributes(int health, int speed);
+    void assignAttributes(enemyAbstract enemy, int health, float speed, String colour);
     void targetPlayer(final float playerX, final float playerY);
 }
