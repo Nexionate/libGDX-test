@@ -1,28 +1,19 @@
 package io.github.some_example_name;
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.ArrayList;
 
-import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 
 public class Main extends Game {
-    private Sprite player;
+    private Player player;
     private Background background;
     private UpgradeMenu menu;
     private enemyAbstract enemy;
@@ -54,7 +45,7 @@ public class Main extends Game {
         tiledMap = new TmxMapLoader().load("exampleBG1.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
-        player = new Sprite();             // assigns a player of object Sprite
+        player = new Player();             // assigns a player of object Sprite
         player.create();                        // constructs the player
 
 
@@ -101,7 +92,7 @@ public class Main extends Game {
 
     public void spawnBullets(int direction) {
         bullet = new playerBullet();
-        bullet.setBulletPosition(player.getPlayerX(), player.getPlayerY(), direction);
+        bullet.setBulletPosition(player.getPlayerXCenter(), player.getPlayerYCenter(), direction);
         bullet.create();
         allBullets.add(bullet);
     }

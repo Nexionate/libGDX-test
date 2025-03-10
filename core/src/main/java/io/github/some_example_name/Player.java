@@ -1,17 +1,12 @@
 package io.github.some_example_name;
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-public class Sprite extends Game{
+public class Player extends Game{
 
     private SpriteBatch batch;
     private Texture texture;
@@ -153,17 +148,19 @@ public class Sprite extends Game{
         return 0;
     }
 
-    public void playerFire(int direction){
-        playerBullet bullet = new playerBullet();
-        bullet.setBulletPosition(getPlayerX(), getPlayerY(), direction);
-        bullet.create();
-    }
+
 
     public float getPlayerX() {
         return playerX;
     }
     public float getPlayerY() {
         return playerY;
+    }
+    public float getPlayerXCenter() {
+        return playerX + (float) texture.getWidth() / 2;
+    }
+    public float getPlayerYCenter() {
+        return playerY + (float) texture.getHeight() / 2;
     }
 
     public void render() {

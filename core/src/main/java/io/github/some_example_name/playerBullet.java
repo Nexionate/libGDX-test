@@ -1,22 +1,16 @@
 package io.github.some_example_name;
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.Game;
 
 public class playerBullet extends Game {
     private Sprite sprite;
     private SpriteBatch batch;
     private Texture texture;
+
     private Rectangle bulletHitbox;
     private float bulletX = 0;
     private float bulletY = 0;
@@ -30,7 +24,6 @@ public class playerBullet extends Game {
         texture = new Texture( Gdx.files.internal("assets/bullet.png") );
         sprite = new Sprite(texture);
         bulletHitbox = new Rectangle( bulletX, bulletY, texture.getWidth(), texture.getHeight());
-        texture.setRotation(90);
     }
 
     public void setBulletPosition(float x, float y, int direction) {
@@ -41,6 +34,7 @@ public class playerBullet extends Game {
 
     public void updateMovement() {
         // FOLLOWS  1:W,    2:A,     3:S,   4:D
+
         switch (direction) {
             case 1: bulletY += speed; break;
             case 2: bulletX -= speed; break;
@@ -50,11 +44,13 @@ public class playerBullet extends Game {
 
     }
     public void render() {
-
+        sprite.setRotation((direction - 1) * 90);
         bulletHitbox.setPosition(bulletX, bulletY);
+        sprite.setPosition(bulletX, bulletY);
         batch.begin();
 //        if (!((bulletX > Gdx.graphics.getWidth() || bulletX < 0) && (bulletY > Gdx.graphics.getHeight() || bulletY < 0))){
-            batch.draw(texture, bulletX, bulletY);
+        //batch.draw(texture, bulletX, bulletY);
+        sprite.draw(batch);
         //}
 
 
