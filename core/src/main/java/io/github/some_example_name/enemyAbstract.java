@@ -28,6 +28,8 @@ public class enemyAbstract extends Game implements enemyInterface{
     private float speed;
     private String colour;
     private BitmapFont font;
+    private boolean isDead = false;
+    private float lightFactor = 0.0f;  // The factor by which to lighten the color (0 to 1)
 
 
 
@@ -41,18 +43,6 @@ public class enemyAbstract extends Game implements enemyInterface{
 
     @Override
     public void updateMovement() {
-//        if ((int) entityX < (int)targetX){
-//            entityX += speed;
-//        }
-//        if ((int) entityX > (int)targetX){
-//            entityX -= speed;
-//        }
-//        if ((int) entityY < (int)targetY){
-//            entityY += speed;
-//        }
-//        if ((int) entityY > (int)targetY){
-//            entityY -= speed;
-//        }
         if ((int) entityX < (int)targetX){
             entityVelX += speed;
         }
@@ -83,23 +73,74 @@ public class enemyAbstract extends Game implements enemyInterface{
         this.targetX = playerX;
         this.targetY = playerY;
     }
+    public void hit(){
+        //lightFactor += 0.05f;  // Gradually increase the light factor each frame
+        lightFactor = 0.3f;
+//        if (lightFactor > 1.0f) {
+//            lightFactor = 1.0f;  // Clamp to the maximum value of 1 to avoid exceeding max color values
+//        }
+
+    }
+    public Rectangle getEnemyHitbox() {
+        return entityHitbox;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public float getEntityX() {
+        return entityX;
+    }
+
+    public float getEntityY() {
+        return entityY;
+    }
+
+    public float getEntityXCenter() {
+        return getEntityX() + entityHitbox.getWidth() / 2;
+    }
+
+    public float getEntityYCenter() {
+        return getEntityY() + entityHitbox.getHeight() / 2;
+    }
+
+    public void update(){
+        isDead = getHealth() <= 0;
+        if (lightFactor > 0.0f) {
+            lightFactor -= 0.01f;
+
+        }
+        if (lightFactor <= 0.0f){
+            lightFactor = 0.0f;
+        }
+    }
+
 
     public void render() {
+        update();
         entityHitbox.setPosition(entityX, entityY);
 
-        String targetPos = "Target X: " +  targetX + " Target Y: " +  targetY;
+        String healthText = "Health: " + getHealth();
 
         batch.begin();
 
         if (Objects.equals(this.colour, "blue")){
-            batch.setColor(0, 0, 1, 1);
+            batch.setColor(0 + lightFactor, 0 + lightFactor, 1 + lightFactor, 1); // Lighter blue
+            //batch.setColor(0, 0, 1, 1);
         } else if (Objects.equals(this.colour, "red")){
-            batch.setColor(1, 1, 0, 1);
+            batch.setColor(1 + lightFactor, 0 + lightFactor, 0 + lightFactor, 1); // Lighter red
+            //batch.setColor(1, 1, 0, 1);
         } else if (Objects.equals(this.colour, "green")){
-            batch.setColor(1, 1, 1, 1);
+            batch.setColor(0 + lightFactor, 1 + lightFactor, 0 + lightFactor, 1); // Lighter green
+            //batch.setColor(1, 1, 1, 1);
         }
 
-        font.draw(batch, targetPos, 100, 100);
+        font.draw(batch, healthText, getEntityXCenter(), getEntityYCenter() + entityHitbox.getWidth());
         batch.draw(texture, entityX, entityY );
 
         batch.end();

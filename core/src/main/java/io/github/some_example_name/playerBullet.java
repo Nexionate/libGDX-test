@@ -34,6 +34,14 @@ public class playerBullet extends Game {
         this.direction = direction;
     }
 
+    public Rectangle getBulletHitbox() {
+        return bulletHitbox;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
     public void updateMovement() {
         // FOLLOWS  1:W,    2:A,     3:S,   4:D
 

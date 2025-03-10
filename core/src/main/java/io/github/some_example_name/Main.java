@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.ArrayList;
 
+import java.util.Iterator;
 import java.util.Random;
 
 
@@ -90,8 +91,36 @@ public class Main extends Game {
         allBullets.add(bullet);
     }
 
+    public void bulletCollision() {
+        if(!(allBullets.isEmpty() && allEnemies.isEmpty())) {
+
+            for (Iterator<playerBullet> bulletIterator = allBullets.iterator(); bulletIterator.hasNext(); ) {
+                playerBullet bullet = bulletIterator.next();
+
+                for (Iterator<enemyAbstract> enemyIterator = allEnemies.iterator(); enemyIterator.hasNext(); ) {
+                    enemyAbstract enemy = enemyIterator.next();
+
+                    if (bullet.getBulletHitbox().overlaps(enemy.getEnemyHitbox())) {
+                        // Apply damage to the enemy
+                        enemy.setHealth(enemy.getHealth() - bullet.getDamage());
+                        enemy.hit();
+                        // Remove the bullet from the list using the bullet iterator
+                        bulletIterator.remove();
+
+                        // Check if the enemy's health is less than 0 and remove it
+                        if (enemy.getHealth() <= 0) {
+                            enemyIterator.remove();  // Remove the enemy from allEnemies
+                        }
+                        break;  // Break out of the inner loop to stop further checks for this bullet
+                    }
+                }
+            }
+
+        }
+    }
     public void update() {
         spawnEnemies();
+        bulletCollision();
         camera.update();
         tiledMapRenderer.setView(camera);
 
@@ -112,6 +141,8 @@ public class Main extends Game {
         if(isFiring != 0){
             spawnBullets(isFiring);
         }
+
+
     }
 
     // the order of rendering matters, so we must make sure to render the BG first
