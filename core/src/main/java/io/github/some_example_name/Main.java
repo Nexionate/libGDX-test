@@ -19,10 +19,17 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class Main extends Game {
     private Sprite player;
     private Background background;
-    Texture img;
+    private UpgradeMenu menu;
+    private enemyAbstract enemy;
+
+
     TiledMap tiledMap;
     OrthographicCamera camera;
     TiledMapRenderer tiledMapRenderer;
+
+    public static boolean gameState = true;
+
+
 
     public void create() {
         //setScreen(new FirstScreen());           // initializes the screen
@@ -36,23 +43,36 @@ public class Main extends Game {
         player = new Sprite();             // assigns a player of object Sprite
         player.create();                        // constructs the player
 
+
         background = new Background();
         background.create();
+
+        menu = new UpgradeMenu();
+        menu.create();
+
+        enemy = new enemyAbstract();
+        enemy.create();
     }
 
     // the order of rendering matters, so we must make sure to render the BG first
     public void render() {
+        update(Gdx.graphics.getDeltaTime());
+
         ScreenUtils.clear(Color.BLACK);         // clears the background every frame
+        player.render();                        // displays the player on the screen
+        tiledMapRenderer.render();
+        enemy.render();
+
+    }
+    public void update(float delta) {
         camera.update();
         tiledMapRenderer.setView(camera);
-        tiledMapRenderer.render();
 
-        //background.render();
         player.collision(background.createWalls());
         player.movement();                      // checks for movement
         player.input();                      // checks for movement
-        player.render();                        // displays the player on the screen
 
+        enemy.targetPlayer(player.getPlayerX(), player.getPlayerY());
     }
 }
 

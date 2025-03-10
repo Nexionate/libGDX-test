@@ -18,11 +18,12 @@ public class Sprite extends Game{
     private BitmapFont font;
     private float playerX;
     private float playerY;
-    private float maxSpeed = 3.0f;
+    private float maxSpeed = 5.0f;
     private float velocityX;
     private float velocityY;
     private String collisionTesting;
     private String velocityText;
+    private int dashTimer;
 
     private Rectangle hitbox;
 
@@ -49,6 +50,23 @@ public class Sprite extends Game{
     public void movement(){
         playerX += ((velocityX + maxSpeed) - playerX) / 10;
         playerY += ((velocityY + maxSpeed) - playerY) / 10;
+        if (dashTimer >= 100){
+            dashTimer = 100;
+        } else if (dashTimer < 0){
+            dashTimer = 0;
+        }
+        if (!Gdx.input.isKeyPressed(Keys.SPACE)){
+            dashTimer++;
+        } else if (Gdx.input.isKeyPressed(Keys.SPACE)){
+            if (dashTimer >= 100){
+                dashTimer -=20;
+            }
+            else{
+
+                dashTimer -=2;
+            }
+        }
+
     }
 
 
@@ -95,21 +113,29 @@ public class Sprite extends Game{
         if (Gdx.input.isKeyPressed(Keys.DOWN)) {
             velocityY -= maxSpeed;
         }
-        if (Gdx.input.isKeyPressed(Keys.SPACE)) {
+        if (Gdx.input.isKeyPressed(Keys.SPACE) && dashTimer > 60) {
             if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-                velocityX -= maxSpeed * 2;
+                velocityX -= maxSpeed * 3;
             }
             if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-                velocityX += maxSpeed * 2;
+                velocityX += maxSpeed * 3;
             }
             if (Gdx.input.isKeyPressed(Keys.UP)) {
-                velocityY += maxSpeed* 2;
+                velocityY += maxSpeed* 3;
             }
             if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-                velocityY -= maxSpeed* 2;
+                velocityY -= maxSpeed* 3;
             }
+
         }
 
+    }
+
+    public float getPlayerX() {
+        return playerX;
+    }
+    public float getPlayerY() {
+        return playerY;
     }
 
     public void render() {
@@ -121,9 +147,12 @@ public class Sprite extends Game{
         String positionText = "Player Position: (" + Math.floor(playerX * 100) / 100 + ", " + Math.floor(playerY * 100) / 100 + ")";
         String collisionText = "Current Collision: " +  collisionTesting;
         String velocityText = "Velocity X: " +  velocityX + ", Velocity X: " +  velocityY;
+        String dashText = "Dash: " +  dashTimer;
+
         font.draw(batch, positionText, 10, Gdx.graphics.getHeight() - 10);
         font.draw(batch, collisionText, 10, Gdx.graphics.getHeight() - 25);
         font.draw(batch, velocityText, 10, Gdx.graphics.getHeight() - 40);
+        font.draw(batch, dashText, 10, Gdx.graphics.getHeight() - 55);
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), Gdx.graphics.getWidth() - 80, Gdx.graphics.getHeight() - 10);
         //batch.draw(hitbox, playerX, playerY);
         batch.draw(texture, playerX, playerY );
