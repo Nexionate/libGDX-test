@@ -35,12 +35,16 @@ public class enemyAbstract extends Game implements enemyInterface{
 
 
 
+
     @Override
     public void create() {
         batch = new SpriteBatch();
         texture = new Texture( Gdx.files.internal("assets/evilMan.png") );
         font = new BitmapFont();
         entityHitbox = new Rectangle( entityX, entityY, texture.getWidth(), texture.getHeight());
+
+
+
     }
 
     @Override
@@ -102,7 +106,9 @@ public class enemyAbstract extends Game implements enemyInterface{
     public float getEntityY() {
         return entityY;
     }
-
+    public String getColour() {
+        return colour;
+    }
     public float getEntityXCenter() {
         return getEntityX() + entityHitbox.getWidth() / 2;
     }
@@ -127,6 +133,8 @@ public class enemyAbstract extends Game implements enemyInterface{
         update();
         entityHitbox.setPosition(entityX, entityY);
 
+
+
         String healthText = "Health: " + getHealth();
 
         batch.begin();
@@ -141,6 +149,7 @@ public class enemyAbstract extends Game implements enemyInterface{
 
         font.draw(batch, healthText, getEntityXCenter() - 35, getEntityYCenter() + entityHitbox.getWidth() /2 + 20);
         batch.draw(texture, entityX, entityY );
+
 
         batch.end();
     }

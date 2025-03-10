@@ -22,10 +22,11 @@ public class Main extends Game {
     private enemyAbstract enemy;
     private ArrayList<enemyAbstract> allEnemies;
     private ArrayList<playerBullet> allBullets;
+    private ArrayList<enemyDie> allDie;
     private int enemyTimer = 0;
     private playerBullet bullet;
     private int isFiring = 0;
-
+    private enemyDie dead;
 
     TiledMap tiledMap;
     OrthographicCamera camera;
@@ -42,6 +43,7 @@ public class Main extends Game {
 
         allEnemies = new ArrayList<>();
         allBullets = new ArrayList<>();
+        allDie = new ArrayList<>();
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false,480,320);
@@ -59,6 +61,8 @@ public class Main extends Game {
         menu = new UpgradeMenu();
         menu.create();
 
+        //dead = new enemyDie();
+        //dead.create();
 
 
     }
@@ -112,6 +116,10 @@ public class Main extends Game {
 
                         // Check if the enemy's health is less than 0 and remove it
                         if (enemy.getHealth() <= 0) {
+                            dead = new enemyDie();
+                            allDie.add(dead);
+                            dead.setPosition(enemy.getEntityX(), enemy.getEntityY(), enemy.getColour());
+                            dead.create();
                             enemyIterator.remove();  // Remove the enemy from allEnemies
                         }
                         break;  // Break out of the inner loop to stop further checks for this bullet
@@ -156,7 +164,14 @@ public class Main extends Game {
 
 
         tiledMapRenderer.render();
+        if (dead != null) {
 
+
+            if(dead.getDone()){
+                dead.render();
+
+            }
+        }
         for (enemyAbstract enemy : allEnemies) {
             enemy.targetPlayer(player.getPlayerX(), player.getPlayerY());
             enemy.updateMovement();
@@ -166,6 +181,8 @@ public class Main extends Game {
             bullet.updateMovement();
             bullet.render();
         }
+
+
 
         player.render();                        // displays the player on the screen
 
