@@ -51,20 +51,15 @@ public class Main extends Game {
         menu.create();
 
         enemy = new enemyAbstract();
+        //enemy.assignAttributes(100, 1);
         enemy.create();
     }
 
+
+
     // the order of rendering matters, so we must make sure to render the BG first
     public void render() {
-        update(Gdx.graphics.getDeltaTime());
-
         ScreenUtils.clear(Color.BLACK);         // clears the background every frame
-        player.render();                        // displays the player on the screen
-        tiledMapRenderer.render();
-        enemy.render();
-
-    }
-    public void update(float delta) {
         camera.update();
         tiledMapRenderer.setView(camera);
 
@@ -73,6 +68,14 @@ public class Main extends Game {
         player.input();                      // checks for movement
 
         enemy.targetPlayer(player.getPlayerX(), player.getPlayerY());
+        enemy.updateMovement();
+
+
+        tiledMapRenderer.render();
+        player.render();                        // displays the player on the screen
+        enemy.render();
+
     }
+
 }
 

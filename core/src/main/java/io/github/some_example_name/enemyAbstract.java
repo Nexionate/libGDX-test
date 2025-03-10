@@ -20,29 +20,44 @@ public class enemyAbstract extends Game implements enemyInterface{
     private int health = 100;
     private float targetX;
     private float targetY;
-    private float speed;
+    private float speed = 2;
+    private BitmapFont font;
 
+    public enemyAbstract(){
 
+    }
     @Override
     public void create() {
         batch = new SpriteBatch();
         texture = new Texture( Gdx.files.internal("assets/evilMan.png") );
+        font = new BitmapFont();
         entityHitbox = new Rectangle( entityX, entityY, texture.getWidth(), texture.getHeight());
     }
 
     @Override
     public void updateMovement() {
-        switch ((int) entityX){
-            case 0:
+        if ((int) entityX < (int)targetX){
+            entityX += speed;
         }
+        if ((int) entityX > (int)targetX){
+            entityX -= speed;
+        }
+        if ((int) entityY < (int)targetY){
+            entityY += speed;
+        }
+        if ((int) entityY > (int)targetY){
+            entityY -= speed;
+        }
+
 
     }
 
     @Override
-    public enemyAbstract assignAttributes(int health, int speed) {
+    public enemyAbstract assignAttributes() {
         enemyAbstract enemy = new enemyAbstract();
         enemy.health = health;
         enemy.speed = speed;
+        enemy.create();
         return this;
     }
 
@@ -54,7 +69,11 @@ public class enemyAbstract extends Game implements enemyInterface{
 
     public void render() {
         entityHitbox.setPosition(entityX, entityY);
+        String targetPos = "Target X: " +  targetX + " Target Y: " +  targetY;
+        String health = "Health" + health;
+
         batch.begin();
+        font.draw(batch, targetPos, 100, 100);
         batch.draw(texture, entityX, entityY );
 
         batch.end();
