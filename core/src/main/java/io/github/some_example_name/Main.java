@@ -67,7 +67,20 @@ public class Main extends Game {
 
     }
     public void spawnEnemies() {
+        double distanceTotal;
+        int possibleSpawnX;
+        int possibleSpawnY;
         Random rand = new Random();
+        do {
+            possibleSpawnX = rand.nextInt(0, Gdx.graphics.getWidth() - 100);
+            possibleSpawnY = rand.nextInt(0, Gdx.graphics.getHeight() - 100);
+            float distanceToPlayerX = Math.abs (possibleSpawnX - player.getPlayerX());
+            float distanceToPlayerY = Math.abs (possibleSpawnY - player.getPlayerY());
+            distanceTotal =  Math.sqrt(Math.pow(distanceToPlayerX, 2) + Math.pow(distanceToPlayerY, 2));
+        } while (distanceTotal < 300);
+
+
+
 
         int length = allEnemies.size();
         if (length < 4 && enemyTimer > 160) {
@@ -75,11 +88,11 @@ public class Main extends Game {
             int col = rand.nextInt(0, 3);
             int randSpeed = rand.nextInt(8, 13);
             switch (col) {
-                case 0: enemy.assignAttributes(enemy, 75, 1 * (float) randSpeed /10, "blue");
+                case 0: enemy.assignAttributes(enemy, 75, 1 * (float) randSpeed /10, "blue", possibleSpawnX, possibleSpawnY);
                     break;
-                case 1: enemy.assignAttributes(enemy, 50, 2 * (float) randSpeed /10, "green");
+                case 1: enemy.assignAttributes(enemy, 50, 2 * (float) randSpeed /10, "green", possibleSpawnX, possibleSpawnY);
                     break;
-                case 2: enemy.assignAttributes(enemy, 25, 3 * (float) randSpeed /10, "red");
+                case 2: enemy.assignAttributes(enemy, 25, 3 * (float) randSpeed /10, "red", possibleSpawnX, possibleSpawnY);
                     break;
             }
             enemy.create();
@@ -165,18 +178,18 @@ public class Main extends Game {
 
         tiledMapRenderer.render();
         if (dead != null) {
-
-
             if(dead.getDone()){
                 dead.render();
-
             }
         }
         for (enemyAbstract enemy : allEnemies) {
             enemy.targetPlayer(player.getPlayerX(), player.getPlayerY());
-            enemy.updateMovement();
+            if(enemy.getSpawningTimer() <= 0){
+                enemy.updateMovement();
+            }
             enemy.render();
         }
+
         for (playerBullet bullet : allBullets) {
             bullet.updateMovement();
             bullet.render();

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
@@ -14,10 +15,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 
 import java.util.Objects;
+import java.util.Random;
 
 public class enemyAbstract extends Game implements enemyInterface{
     private SpriteBatch batch;
     private Texture texture;
+    private Texture textureSpawn;
     private Rectangle entityHitbox;
     private float entityX = 0;
     private float entityY = 0;
@@ -31,15 +34,18 @@ public class enemyAbstract extends Game implements enemyInterface{
     private BitmapFont font;
     private boolean isDead = false;
     private float lightFactor = 0.0f;  // The factor by which to lighten the color (0 to 1)
-
-
-
-
+    private int spawningTimer = 110;
+    private Sprite sprite;
+    private int targetPositionDivisionOffset = 0;
+    private int targetDelayThreshhold = 0;
+    private int targetDelayCounter = 0;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
         texture = new Texture( Gdx.files.internal("assets/evilMan.png") );
+        textureSpawn = new Texture( Gdx.files.internal("assets/enemySpawnPortal.png") );
+        sprite = new Sprite( textureSpawn );
         font = new BitmapFont();
         entityHitbox = new Rectangle( entityX, entityY, texture.getWidth(), texture.getHeight());
 
@@ -49,35 +55,46 @@ public class enemyAbstract extends Game implements enemyInterface{
 
     @Override
     public void updateMovement() {
-        if ((int) entityX < (int)targetX){
+        if ((int) entityX + 20 < (int)targetX){
             entityVelX += speed;
         }
-        if ((int) entityX > (int)targetX){
+        if ((int) entityX - 20 > (int)targetX){
             entityVelX -= speed;
         }
-        if ((int) entityY < (int)targetY){
+        if ((int) entityY + 20 < (int)targetY){
             entityVelY += speed;
         }
-        if ((int) entityY > (int)targetY){
+        if ((int) entityY - 20 > (int)targetY){
             entityVelY -= speed;
         }
-        entityX += ((entityVelX + speed) - entityX) / 20;
-        entityY += ((entityVelY + speed) - entityY) / 20;
+        entityX += ((entityVelX + speed) - entityX) / (20 + targetPositionDivisionOffset);
+        entityY += ((entityVelY + speed) - entityY) / (20 + targetPositionDivisionOffset);
 
 
     }
 
     @Override
-    public void assignAttributes(enemyAbstract enemy, int health, float speed, String colour) {
+    public void assignAttributes(enemyAbstract enemy, int health, float speed, String colour, float startX, float startY) {
         enemy.health = health;
         enemy.speed = speed;
         enemy.colour = colour;
+        entityX = startX;
+        entityY = startY;
+        entityVelX = startX;
+        entityVelY = startY;
+
+        Random rand  = new Random();
+        targetPositionDivisionOffset = rand.nextInt(-8, 8);
+        targetDelayThreshhold = rand.nextInt(2, 20);
     }
 
     @Override
     public void targetPlayer(final float playerX, final float playerY) {
-        this.targetX = playerX;
-        this.targetY = playerY;
+        if (targetDelayCounter >= targetDelayThreshhold){
+            this.targetX = playerX;
+            this.targetY = playerY;
+            targetDelayCounter = 0;
+        }
     }
     public void hit(){
         //lightFactor += 0.05f;  // Gradually increase the light factor each frame
@@ -117,6 +134,10 @@ public class enemyAbstract extends Game implements enemyInterface{
         return getEntityY() + entityHitbox.getHeight() / 2;
     }
 
+    public int getSpawningTimer() {
+        return spawningTimer;
+    }
+
     public void update(){
         isDead = getHealth() <= 0;
         if (lightFactor > 0.0f) {
@@ -126,6 +147,12 @@ public class enemyAbstract extends Game implements enemyInterface{
         if (lightFactor <= 0.0f){
             lightFactor = 0.0f;
         }
+        spawningTimer--;
+        if (spawningTimer <= 0){
+            spawningTimer = 0;
+        }
+
+        targetDelayCounter++;
     }
 
 
@@ -148,7 +175,15 @@ public class enemyAbstract extends Game implements enemyInterface{
         }
 
         font.draw(batch, healthText, getEntityXCenter() - 35, getEntityYCenter() + entityHitbox.getWidth() /2 + 20);
-        batch.draw(texture, entityX, entityY );
+        if (spawningTimer <= 0){
+
+            batch.draw(texture, entityX, entityY );
+        } else{
+            sprite.setPosition(entityX, entityY);
+            sprite.setRotation(spawningTimer * 4.0f);
+            sprite.draw(batch);
+            //batch.draw(textureSpawn, entityX, entityY );
+        }
 
 
         batch.end();

@@ -166,6 +166,7 @@ public class Player extends Game{
         String dashText = "Dash: " +  dashTimer;
 
         font.draw(batch, positionText, 10, Gdx.graphics.getHeight() - 10);
+
         font.draw(batch, collisionText, 10, Gdx.graphics.getHeight() - 25);
         font.draw(batch, velocityText, 10, Gdx.graphics.getHeight() - 40);
         font.draw(batch, dashText, 10, Gdx.graphics.getHeight() - 55);
@@ -174,15 +175,11 @@ public class Player extends Game{
     }
 
     public void render() {
-
-
         hitbox.setPosition(playerX, playerY);
+
         batch.begin();
-
         textRender();
-        //batch.draw(hitbox, playerX, playerY);
         batch.draw(texture, playerX, playerY );
-
         batch.end();
 
 
