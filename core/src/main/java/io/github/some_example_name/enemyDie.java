@@ -74,11 +74,11 @@ public class enemyDie extends Game{
     public void render() {
         sprite = new Sprite(frames[currentFrame]);
         sprite.setScale(0.5f, 0.5f);
-        if (Objects.equals(this.colour, "blue")){
+        if (Objects.equals(this.colour, "blue")) {
             sprite.setColor(0 , 0 , 1 , 1); // Lighter blue
-        } else if (Objects.equals(this.colour, "red")){
+        } else if (Objects.equals(this.colour, "red")) {
             sprite.setColor(1 , 0 , 0 , 1); // Lighter red
-        } else if (Objects.equals(this.colour, "green")){
+        } else if (Objects.equals(this.colour, "green")) {
             sprite.setColor(0 , 1 , 0 , 1); // Lighter green
         }
 
@@ -92,9 +92,6 @@ public class enemyDie extends Game{
         sprite.setPosition(xPos - 175, yPos - 150);
         batch.begin();
         sprite.draw(batch);
-        //batch.draw(frames[currentFrame], xPos, yPos);
-        //System.out.println(currentFrame);
-
         batch.end();
     }
 }

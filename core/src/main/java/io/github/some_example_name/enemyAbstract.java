@@ -17,6 +17,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import java.util.Objects;
 import java.util.Random;
 
+/**
+ * Represents an enemy abstract class.
+ *
+ * @author Ethan O'Connor
+ * @version 2025
+ */
 public class enemyAbstract extends Game implements enemyInterface{
     private SpriteBatch batch;
     private Texture texture;
@@ -39,6 +45,7 @@ public class enemyAbstract extends Game implements enemyInterface{
     private int targetPositionDivisionOffset = 0;
     private int targetDelayThreshhold = 0;
     private int targetDelayCounter = 0;
+
 
     @Override
     public void create() {
@@ -123,9 +130,11 @@ public class enemyAbstract extends Game implements enemyInterface{
     public float getEntityY() {
         return entityY;
     }
+
     public String getColour() {
         return colour;
     }
+
     public float getEntityXCenter() {
         return getEntityX() + entityHitbox.getWidth() / 2;
     }
@@ -138,7 +147,7 @@ public class enemyAbstract extends Game implements enemyInterface{
         return spawningTimer;
     }
 
-    public void update(){
+    public void update() {
         isDead = getHealth() <= 0;
         if (lightFactor > 0.0f) {
             lightFactor -= 0.01f;
@@ -154,7 +163,10 @@ public class enemyAbstract extends Game implements enemyInterface{
 
         targetDelayCounter++;
     }
-
+    public void renderText(){
+        String healthText = "Health: " + getHealth();
+        font.draw(batch, healthText, getEntityXCenter() - 35, getEntityYCenter() + entityHitbox.getWidth() /2 + 20);
+    }
 
     public void render() {
         update();
@@ -162,9 +174,9 @@ public class enemyAbstract extends Game implements enemyInterface{
 
 
 
-        String healthText = "Health: " + getHealth();
-
         batch.begin();
+
+        renderText();
 
         if (Objects.equals(this.colour, "blue")){
             batch.setColor(0 + lightFactor, 0 + lightFactor, 1 + lightFactor, 1); // Lighter blue
@@ -174,7 +186,7 @@ public class enemyAbstract extends Game implements enemyInterface{
             batch.setColor(0 + lightFactor, 1 + lightFactor, 0 + lightFactor, 1); // Lighter green
         }
 
-        font.draw(batch, healthText, getEntityXCenter() - 35, getEntityYCenter() + entityHitbox.getWidth() /2 + 20);
+
         if (spawningTimer <= 0){
 
             batch.draw(texture, entityX, entityY );

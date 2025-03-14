@@ -14,7 +14,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-
+/**
+ * Represents the Main class.
+ *
+ * @author Ethan O'Connor
+ * @version 2025
+ */
 public class Main extends Game {
     private Player player;
     private Background background;
@@ -27,17 +32,20 @@ public class Main extends Game {
     private playerBullet bullet;
     private int isFiring = 0;
     private enemyDie dead;
+    private final int MAX_ENEMIES = 4;
 
     TiledMap tiledMap;
     OrthographicCamera camera;
     TiledMapRenderer tiledMapRenderer;
 
-    public static boolean gameState = true;
+    //public static boolean gameState = true;
 
 
 
 
-
+    /**
+     * Constructs the main driver.
+     */
     public void create() {
 
 
@@ -46,7 +54,8 @@ public class Main extends Game {
         allDie = new ArrayList<>();
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false,480,320);
+        camera.setToOrtho(false, 540, 320);
+        //camera.setToOrtho(false, 480, 320);
         camera.update();
         tiledMap = new TmxMapLoader().load("exampleBG1.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
@@ -54,56 +63,75 @@ public class Main extends Game {
         player = new Player();             // assigns a player of object Sprite
         player.create();                        // constructs the player
 
-
         background = new Background();
         background.create();
 
         menu = new UpgradeMenu();
         menu.create();
+    }
 
-        //dead = new enemyDie();
-        //dead.create();
-
+    /**
+     * Returns the distance between two entities.
+     *
+     * @param entity1X as a float
+     * @param entity1Y as a float
+     * @param entity2X as a float
+     * @param entity2Y as a float
+     * @return distance as a double
+     */
+    public double distanceToEntity(final float entity1X, final float entity1Y,
+                                   final float entity2X, final float entity2Y) {
+        float distanceToPlayerX = Math.abs (entity1X - entity2X);
+        float distanceToPlayerY = Math.abs (entity1Y - entity2Y);
+        return  Math.sqrt(Math.pow(distanceToPlayerX, 2) + Math.pow(distanceToPlayerY, 2));
 
     }
+
+    /**
+     * Creates an enemy type object with random stats and location.
+     */
     public void spawnEnemies() {
         double distanceTotal;
         int possibleSpawnX;
         int possibleSpawnY;
         Random rand = new Random();
         do {
-            possibleSpawnX = rand.nextInt(0, Gdx.graphics.getWidth() - 100);
+            possibleSpawnX = rand.nextInt(0, 1340);
             possibleSpawnY = rand.nextInt(0, Gdx.graphics.getHeight() - 100);
-            float distanceToPlayerX = Math.abs (possibleSpawnX - player.getPlayerX());
-            float distanceToPlayerY = Math.abs (possibleSpawnY - player.getPlayerY());
-            distanceTotal =  Math.sqrt(Math.pow(distanceToPlayerX, 2) + Math.pow(distanceToPlayerY, 2));
+            distanceTotal = distanceToEntity(possibleSpawnX, possibleSpawnY, player.getPlayerX(), player.getPlayerY());
         } while (distanceTotal < 300);
 
 
-
-
         int length = allEnemies.size();
-        if (length < 4 && enemyTimer > 160) {
+        if (length < MAX_ENEMIES && enemyTimer > 160) {
             enemy = new enemyAbstract();
             int col = rand.nextInt(0, 3);
             int randSpeed = rand.nextInt(8, 13);
             switch (col) {
-                case 0: enemy.assignAttributes(enemy, 75, 1 * (float) randSpeed /10, "blue", possibleSpawnX, possibleSpawnY);
+                case 0:
+                    enemy.assignAttributes(enemy, 65, 1 * (float) randSpeed /10,
+                        "blue", possibleSpawnX, possibleSpawnY);
                     break;
-                case 1: enemy.assignAttributes(enemy, 50, 2 * (float) randSpeed /10, "green", possibleSpawnX, possibleSpawnY);
+                case 1:
+                    enemy.assignAttributes(enemy, 40, 2 * (float) randSpeed /10,
+                        "green", possibleSpawnX, possibleSpawnY);
                     break;
-                case 2: enemy.assignAttributes(enemy, 25, 3 * (float) randSpeed /10, "red", possibleSpawnX, possibleSpawnY);
+                case 2:
+                    enemy.assignAttributes(enemy, 25, 3 * (float) randSpeed /10,
+                        "red", possibleSpawnX, possibleSpawnY);
                     break;
             }
+
             enemy.create();
-
-
             allEnemies.add(enemy);
             enemyTimer = 0;
         }
         enemyTimer ++;
     }
 
+    /**
+     * Creates a bullet type object.
+     */
     public void spawnBullets(int direction) {
         bullet = new playerBullet();
         bullet.setBulletPosition(player.getPlayerXCenter(), player.getPlayerYCenter(), direction);
@@ -111,6 +139,25 @@ public class Main extends Game {
         allBullets.add(bullet);
     }
 
+
+
+
+    public void playerCollision() {
+        for (enemyAbstract enemy : allEnemies) {
+            if (distanceToEntity(enemy.getEntityX(), enemy.getEntityY(), player.getPlayerX(), player.getPlayerY()) < 100) {
+                if (enemy.getEnemyHitbox().overlaps(player.getHitbox())) {
+                    if ((player.getHitInvincibility() <= 0)) {
+                        player.setHealth(player.getHealth() - 1);
+                        player.setHitInvincibility(150);
+                    }
+                }
+            }
+
+        }
+    }
+    /**
+     * Checks the bullet object collision with enemy objects.
+     */
     public void bulletCollision() {
         if(!(allBullets.isEmpty() && allEnemies.isEmpty())) {
 
@@ -120,35 +167,46 @@ public class Main extends Game {
                 for (Iterator<enemyAbstract> enemyIterator = allEnemies.iterator(); enemyIterator.hasNext(); ) {
                     enemyAbstract enemy = enemyIterator.next();
 
-                    if (bullet.getBulletHitbox().overlaps(enemy.getEnemyHitbox())) {
-                        // Apply damage to the enemy
-                        enemy.setHealth(enemy.getHealth() - bullet.getDamage());
-                        enemy.hit();
-                        // Remove the bullet from the list using the bullet iterator
-                        bulletIterator.remove();
+                    // this is mainly for performance, only collision check if bullet is close by
+                    if (distanceToEntity(bullet.getBulletX(), bullet.getBulletY(),
+                        enemy.getEntityX(), enemy.getEntityY()) < 200) {
 
-                        // Check if the enemy's health is less than 0 and remove it
-                        if (enemy.getHealth() <= 0) {
-                            dead = new enemyDie();
-                            allDie.add(dead);
-                            dead.setPosition(enemy.getEntityX(), enemy.getEntityY(), enemy.getColour());
-                            dead.create();
-                            enemyIterator.remove();  // Remove the enemy from allEnemies
-                        }
-                        break;  // Break out of the inner loop to stop further checks for this bullet
+                        if (bullet.getBulletHitbox().overlaps(enemy.getEnemyHitbox())) {
+                            // Apply damage to the enemy
+                            enemy.setHealth(enemy.getHealth() - bullet.getDamage());
+                            enemy.hit();
+                            // Remove the bullet from the list using the bullet iterator
+                            bulletIterator.remove();
+
+                            // Check if the enemy's health is less than 0 and remove it
+                            if (enemy.getHealth() <= 0) {
+                                dead = new enemyDie();
+                                allDie.add(dead);
+                                dead.setPosition(enemy.getEntityX(), enemy.getEntityY(), enemy.getColour());
+                                dead.create();
+                                enemyIterator.remove();  // Remove the enemy from allEnemies
+                            }
+                            break;  // Break out of the inner loop to stop further checks for this bullet
+                    }
+
                     }
                 }
             }
 
         }
     }
+
+    /**
+     * Updates the game logic each frame.
+     */
     public void update() {
         spawnEnemies();
         bulletCollision();
+        playerCollision();
         camera.update();
         tiledMapRenderer.setView(camera);
 
-        player.collision(background.createWalls());
+        player.collision(background.createWalls());     // checks for walls
         player.movement();                      // checks for movement
         player.input();                      // checks for movement
 
@@ -160,46 +218,50 @@ public class Main extends Game {
         - 3: Spawn bullet with direction DOWN
         - 4: Spawn bullet with direction RIGHT
         If not 0, call the function to spawn bullet and pass in the direction
+        DON'T USE ANYTHING HIGHER THAN 4!
          */
         isFiring = player.inputBullet();
-        if(isFiring != 0){
+        if (isFiring != 0){
             spawnBullets(isFiring);
         }
-
-
     }
 
-    // the order of rendering matters, so we must make sure to render the BG first
+    /**
+     * Renders all actors to the screen.
+     * the order of rendering matters, so we must make sure to render the BG first
+     */
     public void render() {
         ScreenUtils.clear(Color.BLACK);         // clears the background every frame
-        update();
 
-
+        update();                               // runs all game logic
 
         tiledMapRenderer.render();
-        if (dead != null) {
+
+        if (dead != null) {         // render death animation
             if(dead.getDone()){
                 dead.render();
             }
         }
-        for (enemyAbstract enemy : allEnemies) {
+
+        for (enemyAbstract enemy : allEnemies) {            // render all enemies
             enemy.targetPlayer(player.getPlayerX(), player.getPlayerY());
-            if(enemy.getSpawningTimer() <= 0){
+            /*
+             * Enemies will show a small animation when they initially spawn in to tell
+             * the players so they don't get hit. Instead of a timer, i made a placeholder
+             * timer variable that tells the enemy when it can start moving around and targeting the player
+             */
+            if (enemy.getSpawningTimer() <= 0) {
                 enemy.updateMovement();
             }
             enemy.render();
         }
 
-        for (playerBullet bullet : allBullets) {
+        for (playerBullet bullet : allBullets) {            // render all bullets
             bullet.updateMovement();
             bullet.render();
         }
 
-
-
         player.render();                        // displays the player on the screen
-
-
     }
 
 }

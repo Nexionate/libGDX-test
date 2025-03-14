@@ -24,7 +24,7 @@ public class Background {
     public Rectangle[] createWalls(){
         Rectangle[] walls = new Rectangle[4];
         int resY = Gdx.graphics.getHeight();
-        int resX = Gdx.graphics.getWidth();
+        int resX = 1420;
         walls[0] = new Rectangle(0, resY, resX, 1);
         walls[1] = new Rectangle(0, 0, resX, 1);
         walls[2] = new Rectangle(resX, 0, 1, resY);

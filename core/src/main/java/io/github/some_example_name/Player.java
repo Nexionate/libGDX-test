@@ -6,6 +6,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+
+
+/**
+ * Represents a player class.
+ *
+ * @author Ethan O'Connor
+ * @version 2025
+ */
 public class Player extends Game{
 
     private SpriteBatch batch;
@@ -18,8 +26,13 @@ public class Player extends Game{
     private float velocityY;
     private String collisionTesting;
     private String velocityText;
-    private int dashTimer;
+    private int dashDuration = 20;
+    private int dashCooldown = 300;
+
     private int fireDelay = 0;
+    private int gold = 0;
+    private int health = 3;
+    private int hitInvincibility = 5;
 
     private Rectangle hitbox;
 
@@ -46,22 +59,15 @@ public class Player extends Game{
     public void movement(){
         playerX += ((velocityX + maxSpeed) - playerX) / 10;
         playerY += ((velocityY + maxSpeed) - playerY) / 10;
-        if (dashTimer >= 100){
-            dashTimer = 100;
-        } else if (dashTimer < 0){
-            dashTimer = 0;
-        }
-        if (!Gdx.input.isKeyPressed(Keys.SPACE)){
-            dashTimer++;
-        } else if (Gdx.input.isKeyPressed(Keys.SPACE)){
-            if (dashTimer >= 100){
-                dashTimer -=20;
-            }
-            else{
 
-                dashTimer -=2;
-            }
+
+
+        if (Gdx.input.isKeyPressed(Keys.SPACE) && dashCooldown <= 0) {
+            dashDuration = 15;
+            dashCooldown = 300;
+            hitInvincibility = 30;
         }
+
 
     }
 
@@ -73,13 +79,12 @@ public class Player extends Game{
         }
         else if(walls[1].overlaps(hitbox)){
             collisionTesting = "South";
-//            velocityY = 0;
-            //velocityY = 0 - maxSpeed;
             velocityY = 0;
         }
         else if(walls[2].overlaps(hitbox)){
             collisionTesting = "East";
-            velocityX = Gdx.graphics.getWidth() - texture.getWidth() - 10;
+            int screen = 1420;
+            velocityX = screen - texture.getWidth() - 10;
 
         }
         else if(walls[3].overlaps(hitbox)){
@@ -104,7 +109,7 @@ public class Player extends Game{
         if (Gdx.input.isKeyPressed(Keys.S)) {
             velocityY -= maxSpeed;
         }
-        if (Gdx.input.isKeyPressed(Keys.SPACE) && dashTimer > 60) {
+        if (Gdx.input.isKeyPressed(Keys.SPACE) && dashDuration > 0) {
             if (Gdx.input.isKeyPressed(Keys.A)) {
                 velocityX -= maxSpeed * 3;
             }
@@ -157,25 +162,65 @@ public class Player extends Game{
     public float getPlayerYCenter() {
         return playerY + (float) texture.getHeight() / 2;
     }
+    public int getHealth() {
+        return health;
+    }
+    public void setHealth(int health) {
+        this.health = health;
+    }
+    public void setHitInvincibility(final int duration){
+        hitInvincibility = duration;
+    }
+    public int getHitInvincibility(){
+        return hitInvincibility;
+    }
+    public Rectangle getHitbox() { return hitbox; }
+
+
+    public int getGold() {
+        return gold;
+    }
+    public void setGold(int gold) {
+        this.gold = gold;
+    }
 
     public void textRender(){
-        String positionText = "Player Position: (" + Math.floor(playerX * 100) / 100 + ", " + Math.floor(playerY * 100) / 100 + ")";
+        String positionText = "Player Position:\n(" + Math.floor(playerX * 100) / 100 + ", " + Math.floor(playerY * 100) / 100 + ")";
         String positionCenterText = "Player Position: (" + Math.floor(getPlayerXCenter() * 100) / 100 + ", " + Math.floor(getPlayerYCenter() * 100) / 100 + ")";
         String collisionText = "Current Collision: " +  collisionTesting;
         String velocityText = "Velocity X: " +  velocityX + ", Velocity X: " +  velocityY;
-        String dashText = "Dash: " +  dashTimer;
+        String dashCDText = "Dash CD: " +  dashCooldown;
+        String dashDDText = "Dash Duration: " +  dashDuration;
+        String healthText = "Health: " +  getHealth();
+        String invulText = "Invul: " +  getHitInvincibility();
 
-        font.draw(batch, positionText, 10, Gdx.graphics.getHeight() - 10);
-
-        font.draw(batch, collisionText, 10, Gdx.graphics.getHeight() - 25);
+        font.draw(batch, healthText, getPlayerXCenter() - 35, getPlayerYCenter() + (float) texture.getWidth() /2 + 20);
+        font.draw(batch, positionText, 1440, 800);
+        font.draw(batch, collisionText, 1440, 740);
         font.draw(batch, velocityText, 10, Gdx.graphics.getHeight() - 40);
-        font.draw(batch, dashText, 10, Gdx.graphics.getHeight() - 55);
+        font.draw(batch, dashCDText, 1440, 400);
+        font.draw(batch, dashDDText, 1440, 380);
         font.draw(batch, positionCenterText, 10, Gdx.graphics.getHeight() - 70);
+        font.draw(batch, invulText, 1440, 760);
         font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), Gdx.graphics.getWidth() - 80, Gdx.graphics.getHeight() - 10);
     }
 
+    public void update(){
+        if (hitInvincibility > 0) {
+            hitInvincibility--;
+        }
+        if (dashDuration > 0) {
+            dashDuration--;
+        }
+        if (dashCooldown > 0) {
+            dashCooldown--;
+        }
+    }
+
     public void render() {
+        update();
         hitbox.setPosition(playerX, playerY);
+
 
         batch.begin();
         textRender();

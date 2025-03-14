@@ -41,16 +41,15 @@ public class playerBullet extends Game {
     public int getDamage() {
         return damage;
     }
+    public float getBulletX() {
+        return bulletX;
+    }
+    public float getBulletY() {
+        return bulletY;
+    }
 
     public void updateMovement() {
         // FOLLOWS  1:W,    2:A,     3:S,   4:D
-
-//        switch (direction) {
-//            case 1: bulletY += speed; break;
-//            case 2: bulletX -= speed; break;
-//            case 3: bulletY -= speed; break;
-//            case 4: bulletX += speed; break;
-//        }
         switch (direction) {
             case 1: bulletY += speed; break;
             case 2: bulletX -= speed; break;
@@ -65,12 +64,10 @@ public class playerBullet extends Game {
         sprite.setPosition(bulletX, bulletY);
         batch.begin();
 //        if (!((bulletX > Gdx.graphics.getWidth() || bulletX < 0) && (bulletY > Gdx.graphics.getHeight() || bulletY < 0))){
-        if (!((bulletX + sprite.getWidth() - 10 > Gdx.graphics.getWidth() || bulletX < -10))){
+        if (!((bulletX + sprite.getWidth() - 10 > 1420 || bulletX < -10))){
 
             sprite.draw(batch);
         }
-
-
 
         batch.end();
     }
