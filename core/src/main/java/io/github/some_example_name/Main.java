@@ -33,6 +33,8 @@ public class Main extends Game {
     private int isFiring = 0;
     private enemyDie dead;
     private final int MAX_ENEMIES = 4;
+    private int waveNum = 1;
+    private WaveManager waveManager;
 
     TiledMap tiledMap;
     OrthographicCamera camera;
@@ -52,6 +54,7 @@ public class Main extends Game {
         allEnemies = new ArrayList<>();
         allBullets = new ArrayList<>();
         allDie = new ArrayList<>();
+        waveManager = new WaveManager(1);
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 540, 320);

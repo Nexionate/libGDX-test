@@ -193,16 +193,19 @@ public class Player extends Game{
         String dashDDText = "Dash Duration: " +  dashDuration;
         String healthText = "Health: " +  getHealth();
         String invulText = "Invul: " +  getHitInvincibility();
+        String goldText = "Gold: " +  getGold();
 
         font.draw(batch, healthText, getPlayerXCenter() - 35, getPlayerYCenter() + (float) texture.getWidth() /2 + 20);
-        font.draw(batch, positionText, 1440, 800);
-        font.draw(batch, collisionText, 1440, 740);
         font.draw(batch, velocityText, 10, Gdx.graphics.getHeight() - 40);
+        font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), Gdx.graphics.getWidth() - 80, Gdx.graphics.getHeight() - 10);
+
+        font.draw(batch, positionText, 1440, 800);
+        font.draw(batch, invulText, 1440, 760);
+        font.draw(batch, collisionText, 1440, 740);
         font.draw(batch, dashCDText, 1440, 400);
         font.draw(batch, dashDDText, 1440, 380);
-        font.draw(batch, positionCenterText, 10, Gdx.graphics.getHeight() - 70);
-        font.draw(batch, invulText, 1440, 760);
-        font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), Gdx.graphics.getWidth() - 80, Gdx.graphics.getHeight() - 10);
+        font.draw(batch, goldText, 1440, 360);
+        //font.draw(batch, positionCenterText, 10, Gdx.graphics.getHeight() - 70);
     }
 
     public void update(){
