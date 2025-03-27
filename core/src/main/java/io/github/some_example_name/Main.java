@@ -7,6 +7,8 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.ArrayList;
 
@@ -33,12 +35,15 @@ public class Main extends Game {
     private int isFiring = 0;
     private enemyDie dead;
     private final int MAX_ENEMIES = 4;
+    private int remainingEnemies;
     private int waveNum = 1;
     private WaveManager waveManager;
+    private Button button;
 
     TiledMap tiledMap;
     OrthographicCamera camera;
     TiledMapRenderer tiledMapRenderer;
+
 
     //public static boolean gameState = true;
 
@@ -52,9 +57,10 @@ public class Main extends Game {
 
 
         allEnemies = new ArrayList<>();
+        remainingEnemies = 0;
         allBullets = new ArrayList<>();
         allDie = new ArrayList<>();
-        waveManager = new WaveManager(1);
+        //waveManager = new WaveManager(1);
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 540, 320);
@@ -63,7 +69,7 @@ public class Main extends Game {
         tiledMap = new TmxMapLoader().load("exampleBG1.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
-        player = new Player();             // assigns a player of object Sprite
+        player = new Player();             // assigns a player of object player
         player.create();                        // constructs the player
 
         background = new Background();
@@ -71,6 +77,7 @@ public class Main extends Game {
 
         menu = new UpgradeMenu();
         menu.create();
+
     }
 
     /**
@@ -93,7 +100,7 @@ public class Main extends Game {
     /**
      * Creates an enemy type object with random stats and location.
      */
-    public void spawnEnemies() {
+    public void spawnEnemies(int amount) {
         double distanceTotal;
         int possibleSpawnX;
         int possibleSpawnY;
@@ -105,22 +112,52 @@ public class Main extends Game {
         } while (distanceTotal < 300);
 
 
-        int length = allEnemies.size();
-        if (length < MAX_ENEMIES && enemyTimer > 160) {
+        //int length = allEnemies.size();
+        int counter = 0;
+
+//            if (enemyTimer < 160){
+//                enemyTimer++;
+//            } else {
+//
+//                enemy = new enemyAbstract();
+//                int col = rand.nextInt(0, 3);
+//                int randSpeed = rand.nextInt(8, 13);
+//                counter++;
+//                enemyTimer = 0;
+//                switch (difficulty) {
+//
+//                    case 1:
+//                        enemy.assignAttributes(enemy, 25, 1 * (float) randSpeed / 10,
+//                            "blue", possibleSpawnX, possibleSpawnY);
+//                        break;
+//                    case 2:
+//                        enemy.assignAttributes(enemy, 35, 2 * (float) randSpeed / 10,
+//                            "green", possibleSpawnX, possibleSpawnY);
+//                        break;
+//                    case 3:
+//                        enemy.assignAttributes(enemy, 30, 3 * (float) randSpeed / 10,
+//                            "red", possibleSpawnX, possibleSpawnY);
+//                        break;
+//
+//                }
+//
+//            }
+        if (remainingEnemies < amount && enemyTimer > 60) {
             enemy = new enemyAbstract();
             int col = rand.nextInt(0, 3);
             int randSpeed = rand.nextInt(8, 13);
+            counter ++;
             switch (col) {
                 case 0:
-                    enemy.assignAttributes(enemy, 65, 1 * (float) randSpeed /10,
+                    enemy.assignAttributes(enemy, 25, 1 * (float) randSpeed / 10,
                         "blue", possibleSpawnX, possibleSpawnY);
                     break;
                 case 1:
-                    enemy.assignAttributes(enemy, 40, 2 * (float) randSpeed /10,
+                    enemy.assignAttributes(enemy, 35, 2 * (float) randSpeed / 10,
                         "green", possibleSpawnX, possibleSpawnY);
                     break;
                 case 2:
-                    enemy.assignAttributes(enemy, 25, 3 * (float) randSpeed /10,
+                    enemy.assignAttributes(enemy, 30, 3 * (float) randSpeed / 10,
                         "red", possibleSpawnX, possibleSpawnY);
                     break;
             }
@@ -128,8 +165,31 @@ public class Main extends Game {
             enemy.create();
             allEnemies.add(enemy);
             enemyTimer = 0;
+
         }
         enemyTimer ++;
+    }
+
+    public int startWave(int waveNum) {
+        switch (waveNum) {
+            case 1:
+                return 3;
+
+            case 2:
+                return 4;
+
+            case 3:
+                return 5;
+
+            case 4:
+                return 6;
+
+            case 5:
+                return 5;
+
+            default:
+                return 1;
+        }
     }
 
     /**
@@ -141,6 +201,7 @@ public class Main extends Game {
         bullet.create();
         allBullets.add(bullet);
     }
+
 
 
 
@@ -188,6 +249,7 @@ public class Main extends Game {
                                 dead.setPosition(enemy.getEntityX(), enemy.getEntityY(), enemy.getColour());
                                 dead.create();
                                 enemyIterator.remove();  // Remove the enemy from allEnemies
+                                enemy.dispose();
                             }
                             break;  // Break out of the inner loop to stop further checks for this bullet
                     }
@@ -203,7 +265,12 @@ public class Main extends Game {
      * Updates the game logic each frame.
      */
     public void update() {
-        spawnEnemies();
+        remainingEnemies = allEnemies.size();
+        int enemiesToSpawn = startWave(waveNum);
+        spawnEnemies(enemiesToSpawn - remainingEnemies);
+
+
+
         bulletCollision();
         playerCollision();
         camera.update();
