@@ -18,6 +18,9 @@ public class Player extends Game{
 
     private SpriteBatch batch;
     private Texture texture;
+
+
+
     private BitmapFont font;
     private float playerX;
     private float playerY;
@@ -47,11 +50,7 @@ public class Player extends Game{
         //hitbox = new Rectangle( playerX, playerY, 200, 200);
         hitbox = new Rectangle( playerX, playerY, texture.getWidth(), texture.getHeight());
 
-//        ShapeRenderer shape = new ShapeRenderer();
-//        shape.setColor(0, 1, 0, 1);
-//        shape.begin(ShapeRenderer.ShapeType.Line);
-//        shape.rect(playerX, playerY, texture.getWidth(), texture.getHeight());
-//        shape.end();
+
 
     }
 

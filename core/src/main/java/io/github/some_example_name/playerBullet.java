@@ -62,6 +62,8 @@ public class playerBullet extends Game {
         sprite.setRotation((direction - 1) * 90);
         bulletHitbox.setPosition(bulletX, bulletY);
         sprite.setPosition(bulletX, bulletY);
+
+
         batch.begin();
 //        if (!((bulletX > Gdx.graphics.getWidth() || bulletX < 0) && (bulletY > Gdx.graphics.getHeight() || bulletY < 0))){
         if (!((bulletX + sprite.getWidth() - 10 > 1420 || bulletX < -10))){
